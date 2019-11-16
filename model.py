@@ -134,7 +134,7 @@ model.add(Dropout(0.2))
 model.add(Dense(40))
 model.add(Activation('relu'))
 model.add(Dropout(0.2))
-model.add(Dense(5))
+model.add(Dense(2))
 model.add(Activation('softmax'))
 opt = keras.optimizers.SGD(lr=0.0001, momentum=0.0, decay=0.0, nesterov=False)
 
@@ -194,7 +194,7 @@ lr_reduce = ReduceLROnPlateau(monitor='val_loss', factor=0.9, patience=20, min_l
 clr = CyclicLR(base_lr=0.001, max_lr=0.006,step_size=2000., mode='triangular2')
 # Please change the model name accordingly.
 mcp_save = ModelCheckpoint('model/aug_noiseNshift_2class2_np.h5', save_best_only=False, monitor='val_loss', mode='auto')
-cnnhistory=model.fit(x_traincnn, y_train, batch_size=16, epochs=1000,
+cnnhistory=model.fit(x_traincnn, y_train, batch_size=16, epochs=700,
                      validation_data=(x_testcnn, y_test), callbacks=[mcp_save,clr,es,ts])
 
 # Plotting the Train Valid Loss Graph
@@ -211,8 +211,8 @@ plt.show()
 model.save('C:\\Users\\noahd\\Desktop\\Speech-Emotion-Analyzer-master\\saved_model.h5')
 
 
-config = model.get_config()
-weights = model.get_weights()
+# config = model.get_config()
+# weights = model.get_weights()
 # model.save_weights('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\weights.h5')
 model.save_weights('C:\\Users\\noahd\\Desktop\\Speech-Emotion-Analyzer-master\\saved_weights.h5')
 
@@ -220,7 +220,7 @@ model.save_weights('C:\\Users\\noahd\\Desktop\\Speech-Emotion-Analyzer-master\\s
 # new_model.set_weights(weights)
 
 # mew_model.save_weights('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master')
-model_name = 'Emotion_Voice_Detection_Model2.h5'
+# model_name = 'Emotion_Voice_Detection_Model2.h5'
 # save_dir = os.path.join(os.getcwd(), 'saved_models')
 
 

@@ -155,21 +155,146 @@ plt.figure(figsize=(15, 5))
 librosa.display.waveplot(data, sr=sampling_rate)
 # ^^^^ might nit work
 
+# plt.figure(figsize=(12, 4))
+# librosa.display.specshow(log_S, sr=sample_rate, x_axis='time', y_axis='mel')
+plt.title('Mel power spectrogram ')
+# plt.colorbar(format='%+02.0f dB')
+plt.tight_layout()
+plt.show()
 
 
-#livedf= pd.DataFrame(columns=['feature'])
-X, sample_rate = librosa.load('output10.wav', res_type='kaiser_fast',duration=2.5,sr=22050*2,offset=0.5)
+
+data = pd.DataFrame(columns=['feature'])
+X, sample_rate = librosa.load('output10.wav', res_type='kaiser_fast',duration=3,sr=22050*2,offset=0.5)
 sample_rate = np.array(sample_rate)
 mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=13),axis=0)
 featurelive = mfccs
-livedf2 = featurelive
-print(livedf2.shape)
-livedf2= pd.DataFrame(data=livedf2)
+data = featurelive
+# print(livedf2.shape)
 
-livedf2 = livedf2.stack().to_frame().T
+
+
+# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+
+# df3 = pd.DataFrame(data['feature'].values.tolist())
+# labels = data2_df.label
+
+# newdf = pd.concat([df3,labels], axis=1)
+# rnewdf = newdf.rename(index=str, columns={"0": "label"})
+# rnewdf = rnewdf.fillna(0)
+# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+rnewdf = pd.DataFrame(data=data)
+rnewdf = data.stack().to_frame().T
+
+
+
 
 print(livedf2)
 print(livedf2.shape)
+
+
+
+def plot_time_series(data):
+    """
+    Plot the Audio Frequency.
+    """
+    fig = plt.figure(figsize=(14, 8))
+    plt.title('Raw wave ')
+    plt.ylabel('Amplitude')
+    plt.plot(np.linspace(0, 1, len(data)), data)
+    plt.show()
+
+
+def noise(data):
+    """
+    Adding White Noise.
+    """
+    # you can take any distribution from https://docs.scipy.org/doc/numpy-1.13.0/reference/routines.random.html
+    noise_amp = 0.005*np.random.uniform()*np.amax(data)
+    data = data.astype('float64') + noise_amp * np.random.normal(size=data.shape[0])
+    return data
+    
+def shift(data):
+    """
+    Random Shifting.
+    """
+    s_range = int(np.random.uniform(low=-5, high = 5)*500)
+    return np.roll(data, s_range)
+    
+def stretch(data, rate=0.8):
+    """
+    Streching the Sound.
+    """
+    data = librosa.effects.time_stretch(data, rate)
+    return data
+
+def pitch(data, sample_rate):
+    """
+    Pitch Tuning.
+    """
+    bins_per_octave = 12
+    pitch_pm = 2
+    pitch_change =  pitch_pm * 2*(np.random.uniform())   
+    data = librosa.effects.pitch_shift(data.astype('float64'), 
+                                      sample_rate, n_steps=pitch_change, 
+                                      bins_per_octave=bins_per_octave)
+    return data
+    
+def dyn_change(data):
+    """
+    Random Value Change.
+    """
+    dyn_change = np.random.uniform(low=1.5,high=3)
+    return (data * dyn_change)
+    
+def speedNpitch(data):
+    """
+    peed and Pitch Tuning.
+    """
+    # you can change low and high here
+    length_change = np.random.uniform(low=0.8, high = 1)
+    speed_fac = 1.0  / length_change
+    tmp = np.interp(np.arange(0,len(data),speed_fac),np.arange(0,len(data)),data)
+    minlen = min(data.shape[0], tmp.shape[0])
+    data *= 0
+    data[0:minlen] = tmp[0:minlen]
+    return data
+
+
+
+# Augmentation Method 1
+
+syn_data1 = pd.DataFrame(columns=['feature', 'label'])
+for i in tqdm(range(len(data2_df))):
+    X, sample_rate = librosa.load(data2_df.path[i], res_type='kaiser_fast',duration=input_duration,sr=22050*2,offset=0.5)
+    if data2_df.label[i]:
+#     if data2_df.label[i] == "male_positive":
+        X = noise(X)
+        sample_rate = np.array(sample_rate)
+        mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=13), axis=0)
+        feature = mfccs
+        a = random.uniform(0, 1)
+        syn_data1.loc[i] = [feature, data2_df.label[i]]
+
+# Augmentation Method 2
+
+syn_data2 = pd.DataFrame(columns=['feature', 'label'])
+for i in tqdm(range(len(data2_df))):
+    X, sample_rate = librosa.load(data2_df.path[i], res_type='kaiser_fast',duration=input_duration,sr=22050*2,offset=0.5)
+    if data2_df.label[i]:
+#     if data2_df.label[i] == "male_positive":
+        X = pitch(X, sample_rate)
+        sample_rate = np.array(sample_rate)
+        mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=13), axis=0)
+        feature = mfccs
+        a = random.uniform(0, 1)
+        syn_data2.loc[i] = [feature, data2_df.label[i]]
+
+print(len(syn_data1), len(syn_data2))
+
+
 
 
 livedf2 = np.resize(livedf2,(1,259))    # changed the array here
