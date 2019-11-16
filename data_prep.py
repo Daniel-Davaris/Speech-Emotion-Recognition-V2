@@ -272,9 +272,9 @@ print(len(label8_list))
 
 # Select the label set you want by commenting the unwanteds.
 
-data_df['label'] = label2_list
+# data_df['label'] = label2_list
 # data_df['label'] = label3_list
-# data_df['label'] = label5_list
+data_df['label'] = label5_list
 # data_df['label'] = label8_list
 print(data_df.head())
 
@@ -303,24 +303,24 @@ plot_emotion_dist(a, "#2962FF", "Emotion Distribution")
 
 ## Uncomment all below to use Female set 
 
-# data2_df = data_df.copy()
-# data2_df = data2_df[data2_df.label != "male_none"]
-# data2_df = data2_df[data2_df.label != "female_none"]
-# data2_df = data2_df[data2_df.label != "male_happy"]
-# data2_df = data2_df[data2_df.label != "male_angry"]
-# data2_df = data2_df[data2_df.label != "male_sad"]
-# data2_df = data2_df[data2_df.label != "male_fearful"]
-# data2_df = data2_df[data2_df.label != "male_calm"]
-# data2_df = data2_df[data2_df.label != "male_positive"]
-# data2_df = data2_df[data2_df.label != "male_negative"].reset_index(drop=True)
+data2_df = data_df.copy()
+data2_df = data2_df[data2_df.label != "male_none"]
+data2_df = data2_df[data2_df.label != "female_none"]
+data2_df = data2_df[data2_df.label != "male_happy"]
+data2_df = data2_df[data2_df.label != "male_angry"]
+data2_df = data2_df[data2_df.label != "male_sad"]
+data2_df = data2_df[data2_df.label != "male_fearful"]
+data2_df = data2_df[data2_df.label != "male_calm"]
+data2_df = data2_df[data2_df.label != "male_positive"]
+data2_df = data2_df[data2_df.label != "male_negative"].reset_index(drop=True)
 
-# tmp1 = data2_df[data2_df.actor == 22]
-# tmp2 = data2_df[data2_df.actor == 24]
-# data3_df = pd.concat([tmp1, tmp2],ignore_index=True).reset_index(drop=True)
-# data2_df = data2_df[data2_df.actor != 22]
-# data2_df = data2_df[data2_df.actor != 24].reset_index(drop=True)
-# print (len(data2_df))
-# data2_df.head()
+tmp1 = data2_df[data2_df.actor == 22]
+tmp2 = data2_df[data2_df.actor == 24]
+data3_df = pd.concat([tmp1, tmp2],ignore_index=True).reset_index(drop=True)
+data2_df = data2_df[data2_df.actor != 22]
+data2_df = data2_df[data2_df.actor != 24].reset_index(drop=True)
+print (len(data2_df))
+data2_df.head()
 
 # Male Data Set
 

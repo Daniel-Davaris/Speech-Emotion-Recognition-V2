@@ -18,7 +18,7 @@ import seaborn as sns
 import scipy.io.wavfile
 import tensorflow as tf
 
-from tensorflow import keras
+# from tensorflow import keras
 from sklearn.metrics import confusion_matrix
 # from tensorflow.python.keras import backend as k
 # from tensorflow.keras.models import Sequential
@@ -47,7 +47,7 @@ from scipy.fftpack import fft
 from scipy import signal
 from scipy.io import wavfile
 from tqdm import tqdm
-from tensorflow.keras import backend
+# from tensorflow.keras import backend
 
 # loading json and creating model
 from keras.models import model_from_json
@@ -121,7 +121,7 @@ def get_lr_metric(optimizer):
 # new_model.load_weights('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\.h5')
 
 
-new_model = tf.keras.models.load_model('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\saved_models\\saved_model.h5', custom_objects={'fscore': fscore})
+new_model = tf.keras.models.load_model('C:\\Users\\noahd\\desktop\\Speech-Emotion-Analyzer-master\\saved_models\\saved_model.h5', custom_objects={'fscore': fscore})
 
 new_model.summary()
 

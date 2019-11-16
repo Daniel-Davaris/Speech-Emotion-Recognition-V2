@@ -18,7 +18,7 @@ import seaborn as sns
 import scipy.io.wavfile
 import tensorflow as tf
 
-from tensorflow import keras
+# from tensorflow import keras
 # from tensorflow.python.keras import backend as k
 # from tensorflow.keras.models import Sequential
 from keras import regularizers
@@ -47,6 +47,7 @@ from scipy import signal
 from scipy.io import wavfile
 from tqdm import tqdm
 from tensorflow.keras import backend
+from clr_callback import CyclicLR
 input_duration=3
 
 
@@ -127,9 +128,16 @@ model.add(Conv1D(64, 8, padding='same'))
 model.add(Activation('relu'))
 model.add(Flatten())
 # Edit according to target class no.
-model.add(Dense(2))
+model.add(Dense(80))
+model.add(Activation('relu'))
+model.add(Dropout(0.2))
+model.add(Dense(40))
+model.add(Activation('relu'))
+model.add(Dropout(0.2))
+model.add(Dense(5))
 model.add(Activation('softmax'))
 opt = keras.optimizers.SGD(lr=0.0001, momentum=0.0, decay=0.0, nesterov=False)
+
 # opt = adam(lr=0.0001, momentum=0.0, decay=0.0)
 # opt = adam(lr=0.001, decay=1e-6)
 
@@ -172,18 +180,22 @@ model.summary()
 
 # Compile your model
 
-model.compile(loss='categorical_crossentropy', optimizer=tf.keras.optimizers.Adam, metrics=['accuracy', fscore])
+model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy', fscore])
 
 
 
 
 # Model Training
-
+# es = EarlyStopping(monitor='val_loss')
+es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=100)
+# ts = keras.callbacks.tensorboard_v1.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=32, write_graph=True, write_grads=False, write_images=False, embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None, update_freq='epoch')
+ts = keras.callbacks.TensorBoard(log_dir='./logs')
 lr_reduce = ReduceLROnPlateau(monitor='val_loss', factor=0.9, patience=20, min_lr=0.000001)
+clr = CyclicLR(base_lr=0.001, max_lr=0.006,step_size=2000., mode='triangular2')
 # Please change the model name accordingly.
-mcp_save = ModelCheckpoint('model/aug_noiseNshift_2class2_np.h5', save_best_only=True, monitor='val_loss', mode='min')
-cnnhistory=model.fit(x_traincnn, y_train, batch_size=16, epochs=100,
-                     validation_data=(x_testcnn, y_test), callbacks=[mcp_save, lr_reduce])
+mcp_save = ModelCheckpoint('model/aug_noiseNshift_2class2_np.h5', save_best_only=False, monitor='val_loss', mode='auto')
+cnnhistory=model.fit(x_traincnn, y_train, batch_size=16, epochs=1000,
+                     validation_data=(x_testcnn, y_test), callbacks=[mcp_save,clr,es,ts])
 
 # Plotting the Train Valid Loss Graph
 
@@ -196,13 +208,13 @@ plt.legend(['train', 'test'], loc='upper left')
 plt.show()
 
 # model.save('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\saved_models\\saved_model.h5')
-model.save('C:\\Users\\noah\\Desktop\\Speech-Emotion-Analyzer-master\\saved_model.h5')
+model.save('C:\\Users\\noahd\\Desktop\\Speech-Emotion-Analyzer-master\\saved_model.h5')
 
 
 config = model.get_config()
 weights = model.get_weights()
 # model.save_weights('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\weights.h5')
-model.save_weights('C:\\Users\\noah\\Desktop\\Speech-Emotion-Analyzer-master\\saved_model.h5')
+model.save_weights('C:\\Users\\noahd\\Desktop\\Speech-Emotion-Analyzer-master\\saved_weights.h5')
 
 # new_model = keras.Model.from_config(config)
 # new_model.set_weights(weights)
