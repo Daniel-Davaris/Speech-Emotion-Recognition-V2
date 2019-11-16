@@ -172,7 +172,7 @@ model.summary()
 
 # Compile your model
 
-model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy', fscore])
+model.compile(loss='categorical_crossentropy', optimizer=tf.keras.optimizers.Adam, metrics=['accuracy', fscore])
 
 
 
