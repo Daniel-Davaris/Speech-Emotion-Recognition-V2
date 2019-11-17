@@ -1,3 +1,5 @@
+# Recording live audio data 
+
 import pyaudio
 import wave
 

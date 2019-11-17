@@ -1,3 +1,7 @@
+# This is a downloaded function of the CLR learning rate function that has 
+# been implemented into the model instead of the default learning function 
+
+
 
 from keras.callbacks import *
 

@@ -53,14 +53,15 @@ input_duration=3
 
 
 # all transported files from data prep
-tmp1 = pd.read_pickle("./dummy.pkl")
-tmp3 = pd.read_pickle("./dummy.pkl")
+tmp1 = pd.read_pickle("./dummy.pkl")   # pkl files as array is of differnt type
+tmp3 = pd.read_pickle("./dummy.pkl")  # pkl files as array is of different type 
 data3_df = pd.concat([tmp1, tmp3],ignore_index=True).reset_index(drop=True)
 h5f = h5py.File('data.h5','r')
 x_traincnn = h5f['one'][:]
 x_testcnn = h5f['two'][:]
 y_test = h5f['three'][:]
 y_train = h5f['four'][:]
+
 # lb = h5f['five'][:]
 X_test = h5f['six'][:]
 X_train = h5f['seven'][:]

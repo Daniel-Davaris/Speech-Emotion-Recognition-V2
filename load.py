@@ -48,13 +48,14 @@ from scipy.io import wavfile
 from tqdm import tqdm
 from tensorflow.keras import backend
 
-input_duration=3
+input_duration=3 # var for length of files
 
+# load in the pkl special object files
 tmp1 = pd.read_pickle("./dummy.pkl")
 tmp3 = pd.read_pickle("./dummy.pkl")
 data3_df = pd.concat([tmp1, tmp3],ignore_index=True).reset_index(drop=True)
 
-
+# import h5 remaining data objects 
 h5f = h5py.File('data.h5','r')
 x_traincnn = h5f['one'][:]
 x_testcnn = h5f['two'][:]
@@ -109,7 +110,7 @@ test_valid = np.expand_dims(test_valid, axis=2)
 
 
 
-
+# perform prdiction on the loaded_model data file
 preds = loaded_model.predict(test_valid, 
                          batch_size=16, 
                          verbose=1)
@@ -117,7 +118,7 @@ print(preds)
 
 
 
-
+# comparing various prediction outputs 
 preds1=preds.argmax(axis=1)
 print(preds1)
 

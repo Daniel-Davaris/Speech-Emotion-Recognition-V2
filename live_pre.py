@@ -55,12 +55,12 @@ from keras import backend as K
 
 
 input_duration=3
-
+# importing the pkl special object files
 tmp1 = pd.read_pickle("./dummy.pkl")
 tmp3 = pd.read_pickle("./dummy.pkl")
 data3_df = pd.concat([tmp1, tmp3],ignore_index=True).reset_index(drop=True)
 
-
+# importing the h5 remaining data objects
 h5f = h5py.File('data.h5','r')
 x_traincnn = h5f['one'][:]
 x_testcnn = h5f['two'][:]
@@ -74,7 +74,7 @@ X_train = h5f['seven'][:]
 h5f.close()
 
 
-
+# read on the exported model from the exported json file
 
 json_file = open('model.json', 'r')
 loaded_model_json = json_file.read()
@@ -82,7 +82,7 @@ json_file.close()
 loaded_model = model_from_json(loaded_model_json)
 
 
-
+# Re stating model functions for the live predictions
 def precision(y_true, y_pred):
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
     predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
@@ -120,6 +120,8 @@ def get_lr_metric(optimizer):
 
 
 # new_model = tf.keras.models.load_model('C:\\Users\\noahd\\desktop\\Speech-Emotion-Analyzer-master\\saved_models\\saved_model.h5', custom_objects={'fscore': fscore})
+
+# This is the main exported model which includes model weights 
 new_model = tf.keras.models.load_model('C:\\Users\\danie\\dropbox\\classes\\programming\\final product\\saved_models\\saved_model.h5', custom_objects={'fscore': fscore})
 
 new_model.summary()
@@ -132,7 +134,7 @@ test_valid_lb = np_utils.to_categorical(lb.fit_transform(test_valid_lb))
 
 
 
-
+# Graph of the live wave file 
 data, sampling_rate = librosa.load('output10.wav')
 plt.figure(figsize=(15, 5))
 librosa.display.waveplot(data, sr=sampling_rate)
@@ -143,7 +145,7 @@ plt.tight_layout()
 plt.show()
 
 
-
+# process for feature extraction for the live prevew wave file
 X, sample_rate = librosa.load('output10.wav', res_type='kaiser_fast',duration=2.5,sr=22050*2,offset=0.5)
 sample_rate = np.array(sample_rate)
 mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=13),axis=0)
