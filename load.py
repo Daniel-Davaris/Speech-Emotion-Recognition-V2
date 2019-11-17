@@ -68,26 +68,6 @@ X_train = h5f['seven'][:]
 h5f.close()
 
 
-# model = tf.keras.models.load_model('model.h5')
-
-# # use the keras predict function to run the model on our random file
-# prediction = model.predict([train_X])
-# # output the number in the emotions array the coresponds to the index of the prediction result. 
-# print(categories[int(prediction[0][0])])
-# print(prediction[0])
-
-
-
-
-# # the model.json
-
-# import json
-# model_json = model.to_json()
-# with open("model.json", "w") as json_file:
-#     json_file.write(model_json)
-
-
-
 
 
 # loading json and creating model
@@ -221,13 +201,8 @@ print(c)
 
 
 
-# Visualize Confusion Matrix 
 
-# class_names = ['male_angry', 'male_calm', 'male_fearful', 'male_happy', 'male_sad']
-# class_names = ['female_angry', 'female_calm', 'female_fearful', 'female_happy', 'female_sad']
-# class_names = ['male_negative', 'male_neutral', 'male_positive']
 class_names = ['male_negative', 'male_positive']
-# class_names = ['female_angry', 'female_calm', 'female_fearful', 'female_happy', 'female_sad', 'male_angry', 'male_calm', 'male_fearful', 'male_happy', 'male_sad']
 
 
 print(print_confusion_matrix(c, class_names))

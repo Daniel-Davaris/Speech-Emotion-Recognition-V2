@@ -70,10 +70,8 @@ h5f.close()
 
 
 
-# Set up Keras util functions
-
 from keras import backend as K
-
+# customer model untility function
 def precision(y_true, y_pred):
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
     predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
@@ -102,7 +100,7 @@ def get_lr_metric(optimizer):
         return optimizer.lr
     return lr
 
-# New model
+# layers
 model = Sequential()
 model.add(Conv1D(256, 8, padding='same',input_shape=(X_train.shape[1],1)))
 model.add(Activation('relu'))
@@ -127,7 +125,6 @@ model.add(Activation('relu'))
 model.add(Conv1D(64, 8, padding='same'))
 model.add(Activation('relu'))
 model.add(Flatten())
-# Edit according to target class no.
 model.add(Dense(80))
 model.add(Activation('relu'))
 model.add(Dropout(0.2))
@@ -138,47 +135,10 @@ model.add(Dense(2))
 model.add(Activation('softmax'))
 opt = keras.optimizers.SGD(lr=0.0001, momentum=0.0, decay=0.0, nesterov=False)
 
-# opt = adam(lr=0.0001, momentum=0.0, decay=0.0)
-# opt = adam(lr=0.001, decay=1e-6)
 
-# Original Model
-
-# model = Sequential()
-# model.add(Conv1D(256, 5,padding='same', input_shape=(X_train.shape[1],1)))
-# model.add(Activation('relu'))
-# model.add(Conv1D(128, 5,padding='same'))
-# model.add(Activation('relu'))
-# model.add(Dropout(0.1))
-# model.add(MaxPooling1D(pool_size=(8)))
-# model.add(Conv1D(128, 5,padding='same',))
-# model.add(Activation('relu'))
-# model.add(Conv1D(128, 5,padding='same',))
-# model.add(Activation('relu'))
-# model.add(Conv1D(128, 5,padding='same',))
-# model.add(Activation('relu'))
-# model.add(Dropout(0.2))
-# model.add(Conv1D(128, 5,padding='same',))
-# model.add(Activation('relu'))
-# model.add(Flatten())
-# model.add(Dense(5))
-# model.add(Activation('softmax'))
-# opt = keras.optimizers.rmsprop(lr=0.00001, decay=1e-6)
-
-
-
-# Plotting Model Summary
-
-# model = create_model()
 
 model.summary()
 
-# checkpoint_path = "C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\checkpoints\\cp.ckpt"
-# checkpoint_dir = os.path.dirname(checkpoint_path)
-
-# Create a callback that saves the model's weights
-
-
-# Compile your model
 
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy', fscore])
 
@@ -193,9 +153,9 @@ ts = keras.callbacks.TensorBoard(log_dir='./logs')
 lr_reduce = ReduceLROnPlateau(monitor='val_loss', factor=0.9, patience=20, min_lr=0.000001)
 clr = CyclicLR(base_lr=0.001, max_lr=0.006,step_size=2000., mode='triangular2')
 # Please change the model name accordingly.
-mcp_save = ModelCheckpoint('model/aug_noiseNshift_2class2_np.h5', save_best_only=False, monitor='val_loss', mode='auto')
+# mcp_save = ModelCheckpoint('model/aug_noiseNshift_2class2_np.h5', save_best_only=False, monitor='val_loss', mode='auto')
 cnnhistory=model.fit(x_traincnn, y_train, batch_size=16, epochs=700,
-                     validation_data=(x_testcnn, y_test), callbacks=[mcp_save,clr,es,ts])
+                     validation_data=(x_testcnn, y_test), callbacks=[clr,es,ts])
 
 # Plotting the Train Valid Loss Graph
 
@@ -207,14 +167,14 @@ plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.show()
 
-# model.save('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\saved_models\\saved_model.h5')
-model.save('C:\\Users\\noahd\\Desktop\\Speech-Emotion-Analyzer-master\\saved_model.h5')
+model.save('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\saved_models\\saved_model.h5')
+# model.save('C:\\Users\\noahd\\Desktop\\Speech-Emotion-Analyzer-master\\saved_model.h5')
 
 
 # config = model.get_config()
 # weights = model.get_weights()
-# model.save_weights('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\weights.h5')
-model.save_weights('C:\\Users\\noahd\\Desktop\\Speech-Emotion-Analyzer-master\\saved_weights.h5')
+model.save_weights('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\saved_weights.h5')
+# model.save_weights('C:\\Users\\noahd\\Desktop\\Speech-Emotion-Analyzer-master\\saved_weights.h5')
 
 # new_model = keras.Model.from_config(config)
 # new_model.set_weights(weights)

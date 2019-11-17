@@ -75,8 +75,6 @@ h5f.close()
 
 
 
-# model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy', fscore])
-
 
 json_file = open('model.json', 'r')
 loaded_model_json = json_file.read()
@@ -121,78 +119,45 @@ def get_lr_metric(optimizer):
 # new_model.load_weights('C:\\Users\\danie\\Dropbox\\Classes\\programming\\Speech-Emotion-Analyzer-master\\Speech-Emotion-Analyzer-master\\.h5')
 
 
-new_model = tf.keras.models.load_model('C:\\Users\\noahd\\desktop\\Speech-Emotion-Analyzer-master\\saved_models\\saved_model.h5', custom_objects={'fscore': fscore})
+# new_model = tf.keras.models.load_model('C:\\Users\\noahd\\desktop\\Speech-Emotion-Analyzer-master\\saved_models\\saved_model.h5', custom_objects={'fscore': fscore})
+new_model = tf.keras.models.load_model('C:\\Users\\danie\\dropbox\\classes\\programming\\final product\\saved_models\\saved_model.h5', custom_objects={'fscore': fscore})
 
 new_model.summary()
 
 
-# load weights into new model
-# loaded_model.load_weights("model/aug_noiseNshift_2class2_np.h5")
-# print("Loaded model from disk")
- 
-# evaluate loaded model on test data
-# opt = keras.optimizers.SGD(lr=0.0001, momentum=0.0, decay=0.0, nesterov=False)
-# loaded_model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
-# score = loaded_model.evaluate(x_testcnn, y_test, verbose=0)
-# print("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1]*100))
-# print(len(data3_df))
-# data_test = pd.DataFrame(columns=['feature'])
 
-
-# test_valid = pd.DataFrame(data_test['feature'].values.tolist())
-# test_valid = np.array(test_valid)
 test_valid_lb = np.array(data3_df.label)
 lb = LabelEncoder()
 test_valid_lb = np_utils.to_categorical(lb.fit_transform(test_valid_lb))
-# test_valid = np.expand_dims(test_valid, axis=2)
 
 
 
 
-# dont really care too much
 data, sampling_rate = librosa.load('output10.wav')
 plt.figure(figsize=(15, 5))
 librosa.display.waveplot(data, sr=sampling_rate)
-# ^^^^ might nit work
 
-# plt.figure(figsize=(12, 4))
-# librosa.display.specshow(log_S, sr=sample_rate, x_axis='time', y_axis='mel')
 plt.title('Mel power spectrogram ')
-# plt.colorbar(format='%+02.0f dB')
+
 plt.tight_layout()
 plt.show()
 
 
 
-data = pd.DataFrame(columns=['feature'])
-X, sample_rate = librosa.load('output10.wav', res_type='kaiser_fast',duration=3,sr=22050*2,offset=0.5)
+X, sample_rate = librosa.load('output10.wav', res_type='kaiser_fast',duration=2.5,sr=22050*2,offset=0.5)
 sample_rate = np.array(sample_rate)
 mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=13),axis=0)
 featurelive = mfccs
-data = featurelive
-# print(livedf2.shape)
+livedf2 = featurelive
+print(livedf2.shape)
+livedf2= pd.DataFrame(data=livedf2)
 
-
-
-# vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
-
-# df3 = pd.DataFrame(data['feature'].values.tolist())
-# labels = data2_df.label
-
-# newdf = pd.concat([df3,labels], axis=1)
-# rnewdf = newdf.rename(index=str, columns={"0": "label"})
-# rnewdf = rnewdf.fillna(0)
-# ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-rnewdf = pd.DataFrame(data=data)
-rnewdf = data.stack().to_frame().T
-
-
-
+livedf2 = livedf2.stack().to_frame().T
 
 print(livedf2)
 print(livedf2.shape)
+
+
 
 
 
@@ -264,40 +229,12 @@ def speedNpitch(data):
 
 
 
-# Augmentation Method 1
-
-syn_data1 = pd.DataFrame(columns=['feature', 'label'])
-for i in tqdm(range(len(data2_df))):
-    X, sample_rate = librosa.load(data2_df.path[i], res_type='kaiser_fast',duration=input_duration,sr=22050*2,offset=0.5)
-    if data2_df.label[i]:
-#     if data2_df.label[i] == "male_positive":
-        X = noise(X)
-        sample_rate = np.array(sample_rate)
-        mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=13), axis=0)
-        feature = mfccs
-        a = random.uniform(0, 1)
-        syn_data1.loc[i] = [feature, data2_df.label[i]]
-
-# Augmentation Method 2
-
-syn_data2 = pd.DataFrame(columns=['feature', 'label'])
-for i in tqdm(range(len(data2_df))):
-    X, sample_rate = librosa.load(data2_df.path[i], res_type='kaiser_fast',duration=input_duration,sr=22050*2,offset=0.5)
-    if data2_df.label[i]:
-#     if data2_df.label[i] == "male_positive":
-        X = pitch(X, sample_rate)
-        sample_rate = np.array(sample_rate)
-        mfccs = np.mean(librosa.feature.mfcc(y=X, sr=sample_rate, n_mfcc=13), axis=0)
-        feature = mfccs
-        a = random.uniform(0, 1)
-        syn_data2.loc[i] = [feature, data2_df.label[i]]
-
-print(len(syn_data1), len(syn_data2))
 
 
 
 
-livedf2 = np.resize(livedf2,(1,259))    # changed the array here
+
+livedf2 = np.resize(livedf2,(1,259))    
 
 twodim= np.expand_dims(livedf2, axis=2)
 
@@ -314,4 +251,10 @@ liveabc = livepreds1.astype(int).flatten()
 
 livepredictions = (lb.inverse_transform((liveabc)))
 print(livepredictions)
+# evaluate loaded model on test data
+opt = keras.optimizers.SGD(lr=0.0001, momentum=0.0, decay=0.0, nesterov=False)
+new_model.compile(loss='categorical_crossentropy', optimizer='SGD', metrics=['accuracy'])
+score = new_model.evaluate(x_testcnn, y_test, verbose=0)
+print("%s: %.2f%%" % (new_model.metrics_names[1], score[1]*100))
+
 
