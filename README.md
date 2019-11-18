@@ -29,6 +29,6 @@ In order to get the model and predictions programs working, the following packag
 
 
 ## Sources 
-
+This project utilizes the following repositories and likely incorporates snippets from ML documentation sources 
 * https://github.com/rezachu/emotion_recognition_cnn
 * https://github.com/MITESHPUTHRANNEU/Speech-Emotion-Analyzer
