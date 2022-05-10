@@ -4,7 +4,7 @@ A neural network for detecting emotions in speech
 
 ## Getting Started
 
-The first step in running the network is downloading  the RAVDESS dataset for adio data:
+The first step in running the network is downloading  the RAVDESS dataset for audio data:
 https://zenodo.org/record/1188976#.XdENoVczaUk
 
 Once Requirements are installed, run 'data_prep.py' followed by 'model.y' and finaly 'live_pre.py' and 'load.py' for predictions
